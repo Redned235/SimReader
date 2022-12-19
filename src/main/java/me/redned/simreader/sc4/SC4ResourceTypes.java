@@ -1,6 +1,6 @@
 package me.redned.simreader.sc4;
 
-public class ResourceTypes {
+public class SC4ResourceTypes {
 
     public static final int LOT = (int) Long.parseLong("C9BD5D4A", 16);
     public static final int BUILDING = (int) Long.parseLong("A9BD882D", 16);

@@ -1,7 +1,7 @@
 package me.redned.simreader.sc4.storage;
 
 import lombok.Getter;
-import me.redned.simreader.sc4.ResourceTypes;
+import me.redned.simreader.sc4.SC4ResourceTypes;
 import me.redned.simreader.sc4.SC4ResourceKeys;
 import me.redned.simreader.sc4.storage.type.BuildingFile;
 import me.redned.simreader.sc4.storage.type.LotFile;
@@ -36,7 +36,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readLots() throws IOException {
-        IndexEntry entry = this.getEntryFromType(ResourceTypes.LOT);
+        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.LOT);
         if (entry == null) {
             System.out.println("No lots");
             return;
@@ -49,7 +49,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readBuildings() throws IOException {
-        IndexEntry entry = this.getEntryFromType(ResourceTypes.BUILDING);
+        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.BUILDING);
         if (entry == null) {
             System.out.println("No buildings");
             return;
