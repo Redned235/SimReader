@@ -1,5 +1,6 @@
 package me.redned.simreader.sc4.storage;
 
+import lombok.Getter;
 import me.redned.simreader.sc4.ResourceTypes;
 import me.redned.simreader.sc4.SC4ResourceKeys;
 import me.redned.simreader.sc4.storage.type.BuildingFile;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 /**
  * A {@link DatabasePackedFile} for Sim City 4.
  */
+@Getter
 public class SC4File extends DatabasePackedFile {
     private LotFile lotFile;
     private BuildingFile buildingFile;

@@ -6,6 +6,18 @@ At the moment, this project only supports SimCity 4, but since many other Maxis 
 
 **This is still very much a work in progress and unlikely to be actively maintained.** This is mainly just a fun project for myself, but contributions are certainly welcome!
 
+## Usage
+You can parse a .sc4 file by doing the following:
+```java
+SC4File file = new SC4File(Paths.get("my_city.sc4"));
+try {
+    file.read();
+} catch (IOException e) {
+    throw new RuntimeException(e);
+}
+```        
+
+
 ## Credits
 Much of this project would not be possible without the following resources & repositories:
 - [SC4Devotion Wiki](https://wiki.sc4devotion.com/)
