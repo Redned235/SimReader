@@ -11,7 +11,9 @@ import me.redned.simreader.storage.model.PersistentResourceKey;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,5 +71,16 @@ public class ExemplarFile extends DatabasePackedFile {
             CohortSubfile cohort = this.cohortFiles.get(cohortKey);
             cohort.addChild(entry.getKey(), entry.getValue());
         }
+    }
+
+    public List<ExemplarSubfile> getExemplarFiles(int type) {
+        List<ExemplarSubfile> files = new ArrayList<>();
+        for (Map.Entry<PersistentResourceKey, ExemplarSubfile> entry : this.exemplarFiles.entrySet()) {
+            if (entry.getKey().getType() == type) {
+                files.add(entry.getValue());
+            }
+        }
+
+        return files;
     }
 }

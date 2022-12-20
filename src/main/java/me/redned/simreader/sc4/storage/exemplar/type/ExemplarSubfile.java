@@ -2,6 +2,7 @@ package me.redned.simreader.sc4.storage.exemplar.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.storage.model.PersistentResourceKey;
 import me.redned.simreader.util.Utils;
@@ -49,6 +50,7 @@ public class ExemplarSubfile {
         List<Property> properties = new ArrayList<>(propertyCount);
         for (int i = 0; i < propertyCount; i++) {
             int id = buffer.readUInt32();
+
             short valueType = buffer.readUInt16();
             short keyType = buffer.readUInt16();
 
@@ -65,10 +67,12 @@ public class ExemplarSubfile {
                         buffer.readValueType(EXEMPLAR_DATA_READERS, property.values, valueType);
                     }
                 }
-            } else if (keyType == 0x00) {
+            } else {
                 buffer.readByte(); // count - should always be 0
-                buffer.readValueType(property.values, valueType);
+                buffer.readValueType(EXEMPLAR_DATA_READERS, property.values, valueType);
             }
+
+            properties.add(property);
         }
 
         return factory.create(
@@ -87,6 +91,7 @@ public class ExemplarSubfile {
         BINARY
     }
 
+    @ToString
     @RequiredArgsConstructor
     @Getter
     public static class Property {
