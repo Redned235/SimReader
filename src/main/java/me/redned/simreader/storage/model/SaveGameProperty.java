@@ -16,7 +16,7 @@ public class SaveGameProperty {
     private final int propertyNameValue;
     private final int propertyNameValueCopy;
     private final int unknown1;
-    private final byte dataType;
+    private final byte valueType;
     private final byte keyType;
     private final short unknown2;
     private final int dataRepeatedCount;
@@ -26,7 +26,7 @@ public class SaveGameProperty {
         int propertyNameValue = buffer.readUInt32();
         int propertyNameValueCopy = buffer.readUInt32();
         int unknown1 = buffer.readUInt32();
-        byte dataType = buffer.readByte();
+        byte valueType = buffer.readByte();
         byte keyType = buffer.readByte();
         short unknown2 = buffer.readUInt16();
 
@@ -35,17 +35,17 @@ public class SaveGameProperty {
         if (keyType == Byte.MIN_VALUE) { // technically 0x80 but overflows in Java to Byte.MIN_VALUE
             dataRepeatedCount = buffer.readUInt32();
             for (int i = 0; i < dataRepeatedCount; i++) {
-                buffer.readDataType(data, dataType);
+                buffer.readValueType(data, valueType);
             }
         } else {
-            buffer.readDataType(data, dataType);
+            buffer.readValueType(data, valueType);
         }
 
         return new SaveGameProperty(
                 propertyNameValue,
                 propertyNameValueCopy,
                 unknown1,
-                dataType,
+                valueType,
                 keyType,
                 unknown2,
                 dataRepeatedCount,

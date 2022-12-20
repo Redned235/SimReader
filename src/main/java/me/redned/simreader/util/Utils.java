@@ -3,8 +3,19 @@ package me.redned.simreader.util;
 import me.redned.simreader.storage.FileBuffer;
 
 import java.util.List;
+import java.util.Map;
 
 public class Utils {
+    public static final Map<Integer, ValueTypeReader> SGPROP_DATA_READERS = Map.of(
+            0x01, (data, buffer, len) -> data.add(buffer.readByte()),
+            0x02, (data, buffer, len) ->  data.add(buffer.readUInt16()),
+            0x03, (data, buffer, len) ->  data.add(buffer.readUInt32()),
+            0x07, (data, buffer, len) ->  data.add(buffer.readInt32()),
+            0x08, (data, buffer, len) ->  data.add(buffer.readInt64()),
+            0x09, (data, buffer, len) ->  data.add(buffer.readSingle()),
+            0x0B, (data, buffer, len) ->  data.add(buffer.readBoolean()),
+            0x0C, (data, buffer, len) ->  data.add(buffer.readString(len))
+    );
 
     public static int readUInt32(int index, byte[] bytes) {
         long result = (int) bytes[index] & 0xff;
@@ -38,22 +49,29 @@ public class Utils {
         return (char) ((0xff & bytes[index]) << 8 | (0xff & bytes[index + 1]) << 0);
     }
 
-    public static void readDataType(FileBuffer buffer, List<Object> data, int dataType) {
-        readDataType(buffer, data, dataType, 1);
+    public static void readValueType(FileBuffer buffer, List<Object> data, int valueType) {
+        readValueType(buffer, data, valueType, 1);
     }
 
-    public static void readDataType(FileBuffer buffer, List<Object> data, int dataType, int strLen) {
-        switch (dataType) {
-            case 0x01 -> data.add(buffer.readByte());
-            case 0x02 -> data.add(buffer.readUInt16());
-            case 0x03 -> data.add(buffer.readUInt32());
-            case 0x07 -> data.add(buffer.readInt32());
-            case 0x08 -> data.add(buffer.readInt64());
-            case 0x09 -> data.add(buffer.readSingle());
-            case 0x0B -> data.add(buffer.readBoolean());
-            case 0x0C -> data.add(buffer.readString(strLen));
-            default -> {
-            }
+    public static void readValueType(FileBuffer buffer, List<Object> data, int valueType, int strLen) {
+        readValueType(SGPROP_DATA_READERS, buffer, data, valueType, strLen);
+    }
+
+    public static void readValueType(Map<Integer, ValueTypeReader> dataReaders, FileBuffer buffer, List<Object> data, int valueType) {
+        readValueType(dataReaders, buffer, data, valueType, 1);
+    }
+
+    public static void readValueType(Map<Integer, ValueTypeReader> dataReaders, FileBuffer buffer, List<Object> data, int valueType, int strLen) {
+        ValueTypeReader reader = dataReaders.get(valueType);
+        if (reader == null) {
+            return;
         }
+
+        reader.read(data, buffer, strLen);
+    }
+
+    public interface ValueTypeReader {
+
+        void read(List<Object> data, FileBuffer buffer, int len);
     }
 }

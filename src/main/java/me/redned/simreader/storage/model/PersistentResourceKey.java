@@ -13,6 +13,10 @@ public class PersistentResourceKey {
     private int group;
     private int instance;
 
+    public boolean isEmpty() {
+        return this.type == 0 && this.group == 0 && this.instance == 0;
+    }
+
     @Override
     public String toString() {
         return "PersistentResourceKey{" +

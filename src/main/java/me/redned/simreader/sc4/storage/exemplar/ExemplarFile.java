@@ -1,5 +1,6 @@
 package me.redned.simreader.sc4.storage.exemplar;
 
+import lombok.Getter;
 import me.redned.simreader.sc4.SC4ResourceTypes;
 import me.redned.simreader.sc4.storage.exemplar.type.CohortSubfile;
 import me.redned.simreader.sc4.storage.exemplar.type.ExemplarSubfile;
@@ -17,6 +18,7 @@ import java.util.Map;
  * A {@link DatabasePackedFile} for SimCity 4 that contains
  * Exemplar data for the game.
  */
+@Getter
 public class ExemplarFile extends DatabasePackedFile {
     private final Map<PersistentResourceKey, ExemplarSubfile> exemplarFiles = new HashMap<>();
     private final Map<PersistentResourceKey, CohortSubfile> cohortFiles = new HashMap<>();

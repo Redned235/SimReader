@@ -4,13 +4,26 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.storage.model.PersistentResourceKey;
+import me.redned.simreader.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
 public class ExemplarSubfile {
+    private static final Map<Integer, Utils.ValueTypeReader> EXEMPLAR_DATA_READERS = Map.of(
+            0x100, (data, buffer, len) -> data.add(buffer.readByte()),
+            0x200, (data, buffer, len) -> data.add(buffer.readUInt16()),
+            0x300, (data, buffer, len) -> data.add(buffer.readUInt32()),
+            0x700, (data, buffer, len) -> data.add(buffer.readInt32()),
+            0x800, (data, buffer, len) -> data.add(buffer.readInt64()),
+            0x900, (data, buffer, len) -> data.add(buffer.readSingle()),
+            0xB00, (data, buffer, len) -> data.add(buffer.readBoolean()),
+            0xC00, (data, buffer, len) -> data.add(buffer.readString(len))
+    );
+
     private final String fileIdentifier;
     private final Format format;
     private final int versionNumber;
@@ -44,17 +57,17 @@ public class ExemplarSubfile {
                 buffer.readByte(); // unused flag
 
                 int count = buffer.readUInt32();
-                if (valueType == 0x0C) {
+                if (valueType == 0xC00) {
                     // String uses count to read string size
-                    buffer.readDataType(property.values, valueType, count);
+                    buffer.readValueType(EXEMPLAR_DATA_READERS, property.values, valueType, count);
                 } else {
                     for (int j = 0; j < count; j++) {
-                        buffer.readDataType(property.values, valueType);
+                        buffer.readValueType(EXEMPLAR_DATA_READERS, property.values, valueType);
                     }
                 }
-            } else {
+            } else if (keyType == 0x00) {
                 buffer.readByte(); // count - should always be 0
-                buffer.readDataType(property.values, valueType);
+                buffer.readValueType(property.values, valueType);
             }
         }
 

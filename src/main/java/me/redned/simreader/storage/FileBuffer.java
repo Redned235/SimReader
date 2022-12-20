@@ -6,6 +6,7 @@ import me.redned.simreader.util.Utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -85,12 +86,20 @@ public class FileBuffer {
         }
     }
 
-    public void readDataType(List<Object> data, int dataType) {
-        Utils.readDataType(this, data, dataType);
+    public void readValueType(List<Object> data, int valueType) {
+        Utils.readValueType(this, data, valueType);
     }
 
-    public void readDataType(List<Object> data, int dataType, int strLen) {
-        Utils.readDataType(this, data, dataType, strLen);
+    public void readValueType(List<Object> data, int valueType, int strLen) {
+        Utils.readValueType(this, data, valueType, strLen);
+    }
+
+    public void readValueType(Map<Integer, Utils.ValueTypeReader> dataReaders, List<Object> data, int valueType) {
+        Utils.readValueType(dataReaders, this, data, valueType);
+    }
+
+    public void readValueType(Map<Integer, Utils.ValueTypeReader> dataReaders, List<Object> data, int valueType, int strLen) {
+        Utils.readValueType(dataReaders, this, data, valueType, strLen);
     }
 
     public void skip(int amount) {
