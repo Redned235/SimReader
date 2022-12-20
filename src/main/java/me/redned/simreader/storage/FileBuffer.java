@@ -2,9 +2,10 @@ package me.redned.simreader.storage;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import me.redned.simreader.Utils;
+import me.redned.simreader.util.Utils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -82,6 +83,14 @@ public class FileBuffer {
         } finally {
             this.cursor += 8;
         }
+    }
+
+    public void readDataType(List<Object> data, int dataType) {
+        Utils.readDataType(this, data, dataType);
+    }
+
+    public void readDataType(List<Object> data, int dataType, int strLen) {
+        Utils.readDataType(this, data, dataType, strLen);
     }
 
     public void skip(int amount) {

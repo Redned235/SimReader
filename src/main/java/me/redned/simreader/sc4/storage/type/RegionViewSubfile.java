@@ -8,7 +8,7 @@ import me.redned.simreader.storage.FileBuffer;
 @ToString
 @Getter
 @RequiredArgsConstructor
-public class RegionViewFile {
+public class RegionViewSubfile {
     private final short majorVersion;
     private final short minorVersion;
     private final int tileXLocation;
@@ -28,7 +28,7 @@ public class RegionViewFile {
     private final String mayorName;
     private final String internalDescription;
 
-    public static RegionViewFile parse(FileBuffer buffer) {
+    public static RegionViewSubfile parse(FileBuffer buffer) {
         short majorVersion = buffer.readUInt16();
         short minorVersion = buffer.readUInt16();
 
@@ -72,7 +72,7 @@ public class RegionViewFile {
         int internalDescriptionLength = buffer.readUInt32();
         String internalDescriptionName = buffer.readString(internalDescriptionLength);
 
-        return new RegionViewFile(
+        return new RegionViewSubfile(
                 majorVersion,
                 minorVersion,
                 tileXLocation,

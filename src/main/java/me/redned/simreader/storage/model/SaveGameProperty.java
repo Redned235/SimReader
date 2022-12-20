@@ -35,10 +35,10 @@ public class SaveGameProperty {
         if (keyType == Byte.MIN_VALUE) { // technically 0x80 but overflows in Java to Byte.MIN_VALUE
             dataRepeatedCount = buffer.readUInt32();
             for (int i = 0; i < dataRepeatedCount; i++) {
-                readDataType(buffer, data, dataType);
+                buffer.readDataType(data, dataType);
             }
         } else {
-            readDataType(buffer, data, dataType);
+            buffer.readDataType(data, dataType);
         }
 
         return new SaveGameProperty(
@@ -61,20 +61,5 @@ public class SaveGameProperty {
         }
 
         return properties;
-    }
-
-    private static void readDataType(FileBuffer buffer, List<Object> data, int dataType) {
-        switch (dataType) {
-            case 0x01 -> data.add(buffer.readByte());
-            case 0x02 -> data.add(buffer.readUInt16());
-            case 0x03 -> data.add(buffer.readUInt32());
-            case 0x07 -> data.add(buffer.readInt32());
-            case 0x08 -> data.add(buffer.readInt64());
-            case 0x09 -> data.add(buffer.readSingle());
-            case 0x0B -> data.add(buffer.readBoolean());
-            case 0x0C -> data.add(buffer.readChar());
-            default -> {
-            }
-        }
     }
 }

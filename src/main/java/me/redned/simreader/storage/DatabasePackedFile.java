@@ -1,8 +1,10 @@
 package me.redned.simreader.storage;
 
+import lombok.RequiredArgsConstructor;
 import me.redned.simreader.storage.compression.QFS;
 import me.redned.simreader.storage.model.IndexEntry;
 import me.redned.simreader.storage.model.PersistentResourceKey;
+import me.redned.simreader.util.Utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,14 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+@RequiredArgsConstructor
 public class DatabasePackedFile {
     protected final Path path;
     protected final Map<PersistentResourceKey, IndexEntry> indexEntries = new HashMap<>();
     protected final Map<Integer, IndexEntry> entryByTypeCache = new WeakHashMap<>();
-
-    public DatabasePackedFile(Path path) {
-        this.path = path;
-    }
 
     public void read() throws IOException {
         System.out.println("Reading DBPF " + this.path + "...");
@@ -80,11 +79,9 @@ public class DatabasePackedFile {
     }
 
     public byte[] getBytesAtIndex(IndexEntry entry) throws IOException {
-        boolean compressed = this.isCompressed(entry);
-        byte[] compressedBytes = this.getCompressedBytesAtIndex(entry);
+        byte[] compressedBytes = this.getRawBytesAtIndex(entry);
+        boolean compressed = ((compressedBytes[4] & 0xff) << 8) + (compressedBytes[5] & 0xff) == QFS.COMPRESSION_FLAG;
         if (compressed) {
-            System.out.println("Found compressed data, decompressing...");
-
             return QFS.decompress(compressedBytes);
         }
 
@@ -95,7 +92,7 @@ public class DatabasePackedFile {
         return this.indexEntries.containsKey(entry.getResourceKey());
     }
 
-    protected byte[] getCompressedBytesAtIndex(IndexEntry entry) throws IOException {
+    protected byte[] getRawBytesAtIndex(IndexEntry entry) throws IOException {
         try (FileInputStream stream = new FileInputStream(this.path.toFile())) {
             int fileSize = entry.getFileSize();
 

@@ -3,9 +3,9 @@ package me.redned.simreader.sc4.storage;
 import lombok.Getter;
 import me.redned.simreader.sc4.SC4ResourceTypes;
 import me.redned.simreader.sc4.SC4ResourceKeys;
-import me.redned.simreader.sc4.storage.type.BuildingFile;
-import me.redned.simreader.sc4.storage.type.LotFile;
-import me.redned.simreader.sc4.storage.type.RegionViewFile;
+import me.redned.simreader.sc4.storage.type.BuildingSubfile;
+import me.redned.simreader.sc4.storage.type.LotSubfile;
+import me.redned.simreader.sc4.storage.type.RegionViewSubfile;
 import me.redned.simreader.storage.DatabasePackedFile;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.storage.model.IndexEntry;
@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * A {@link DatabasePackedFile} for Sim City 4.
+ * A {@link DatabasePackedFile} for SimCity 4.
  */
 @Getter
 public class SC4File extends DatabasePackedFile {
-    private LotFile lotFile;
-    private BuildingFile buildingFile;
-    private RegionViewFile regionViewFile;
+    private LotSubfile lotFile;
+    private BuildingSubfile buildingFile;
+    private RegionViewSubfile regionViewFile;
 
     public SC4File(Path path) {
         super(path);
@@ -36,27 +36,27 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readLots() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.LOT);
+        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.LOT_SUBFILE);
         if (entry == null) {
             System.out.println("No lots");
             return;
         }
 
         byte[] lotFileData = this.getBytesAtIndex(entry);
-        this.lotFile = LotFile.parse(lotFileData, lotFileData.length);
+        this.lotFile = LotSubfile.parse(lotFileData, lotFileData.length);
 
         System.out.println("Read " + this.lotFile.getLots().size() + " lots!");
     }
 
     private void readBuildings() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.BUILDING);
+        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.BUILDING_SUBFILE);
         if (entry == null) {
             System.out.println("No buildings");
             return;
         }
 
         byte[] buildingFileData = this.getBytesAtIndex(entry);
-        this.buildingFile = BuildingFile.parse(buildingFileData, buildingFileData.length);
+        this.buildingFile = BuildingSubfile.parse(buildingFileData, buildingFileData.length);
 
         System.out.println("Read " + this.buildingFile.getBuildings().size() + " buildings!");
     }
@@ -69,6 +69,6 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] regionViewFileData = this.getBytesAtIndex(entry);
-        this.regionViewFile = RegionViewFile.parse(new FileBuffer(regionViewFileData));
+        this.regionViewFile = RegionViewSubfile.parse(new FileBuffer(regionViewFileData));
     }
 }

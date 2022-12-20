@@ -1,4 +1,8 @@
-package me.redned.simreader;
+package me.redned.simreader.util;
+
+import me.redned.simreader.storage.FileBuffer;
+
+import java.util.List;
 
 public class Utils {
 
@@ -32,5 +36,24 @@ public class Utils {
 
     public static char readChar(int index, byte[] bytes) {
         return (char) ((0xff & bytes[index]) << 8 | (0xff & bytes[index + 1]) << 0);
+    }
+
+    public static void readDataType(FileBuffer buffer, List<Object> data, int dataType) {
+        readDataType(buffer, data, dataType, 1);
+    }
+
+    public static void readDataType(FileBuffer buffer, List<Object> data, int dataType, int strLen) {
+        switch (dataType) {
+            case 0x01 -> data.add(buffer.readByte());
+            case 0x02 -> data.add(buffer.readUInt16());
+            case 0x03 -> data.add(buffer.readUInt32());
+            case 0x07 -> data.add(buffer.readInt32());
+            case 0x08 -> data.add(buffer.readInt64());
+            case 0x09 -> data.add(buffer.readSingle());
+            case 0x0B -> data.add(buffer.readBoolean());
+            case 0x0C -> data.add(buffer.readString(strLen));
+            default -> {
+            }
+        }
     }
 }

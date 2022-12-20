@@ -2,7 +2,7 @@ package me.redned.simreader.sc4.storage.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.redned.simreader.Utils;
+import me.redned.simreader.util.Utils;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.sc4.type.Lot;
 
@@ -11,11 +11,11 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class LotFile {
+public class LotSubfile {
 
     private final List<Lot> lots;
 
-    public static LotFile parse(byte[] bytes, int size) {
+    public static LotSubfile parse(byte[] bytes, int size) {
         List<Lot> lots = new ArrayList<>();
 
         int offset = 0;
@@ -36,6 +36,6 @@ public class LotFile {
             System.err.println("Did not read all lots! Had " + size + " remaining bytes!");
         }
 
-        return new LotFile(lots);
+        return new LotSubfile(lots);
     }
 }

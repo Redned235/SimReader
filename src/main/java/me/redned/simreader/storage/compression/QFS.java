@@ -10,6 +10,7 @@ package me.redned.simreader.storage.compression;
  * Version 1.22 - Copyright (C) 1998-2002
  */
 public class QFS {
+    public static final int COMPRESSION_FLAG = 0x10FB;
 
     public static byte[] decompress(byte[] input) {
         int packcode;

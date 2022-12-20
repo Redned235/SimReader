@@ -2,7 +2,7 @@ package me.redned.simreader.sc4.storage.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.redned.simreader.Utils;
+import me.redned.simreader.util.Utils;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.sc4.type.Building;
 
@@ -11,10 +11,10 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class BuildingFile {
+public class BuildingSubfile {
     private final List<Building> buildings;
 
-    public static BuildingFile parse(byte[] bytes, int size) {
+    public static BuildingSubfile parse(byte[] bytes, int size) {
         List<Building> buildings = new ArrayList<>();
 
         int offset = 0;
@@ -35,6 +35,6 @@ public class BuildingFile {
             System.err.println("Did not read all buildings! Had " + size + " remaining bytes!");
         }
 
-        return new BuildingFile(buildings);
+        return new BuildingSubfile(buildings);
     }
 }
