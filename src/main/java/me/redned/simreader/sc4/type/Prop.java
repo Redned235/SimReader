@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class Building {
+public class Prop {
     private final int offset;
     private final int size;
     private final int crc;
@@ -23,7 +23,7 @@ public class Building {
     private final short zotWord;
     private final byte unknown1;
     private final byte appearanceFlag;
-    private final int x278128A0; // unknown
+    private final int xA823821E; // unknown
     private final byte minTractX;
     private final byte minTractZ;
     private final byte maxTractX;
@@ -32,7 +32,6 @@ public class Building {
     private final short tractSizeZ;
     private final int saveGamePropertyCount;
     private final List<SaveGameProperty> properties;
-    private final byte unknown2;
     private final int groupId;
     private final int typeId;
     private final int instanceId;
@@ -44,18 +43,32 @@ public class Building {
     private final float maxCoordinateY;
     private final float maxCoordinateZ;
     private final byte orientation;
-    private final float scaffoldingHeight;
+    private final byte state;
+    private final byte startTime;
+    private final byte stopTime;
+    private final byte count;
+
+    private final int interval;
+    private final int duration;
+    private final int startDate;
+    private final int endDate;
+
+    private final byte appearanceChance;
+    private final byte lotType;
+    private final int objectId;
+    private final byte conditionalAppearance;
 
     public PersistentResourceKey getResourceKey() {
         return new PersistentResourceKey(this.typeId, this.groupId, this.instanceId);
     }
 
-    public static Building parse(FileBuffer buffer) {
+    public static Prop parse(FileBuffer buffer) {
         int offset = buffer.cursor();
         buffer.resetCursor();
 
         int saveGamePropertyCount;
-        Building building = new Building(
+        byte count;
+        return new Prop(
                 offset,
                 buffer.readUInt32(),
                 buffer.readUInt32(),
@@ -74,7 +87,6 @@ public class Building {
                 buffer.readUInt16(),
                 saveGamePropertyCount = buffer.readUInt32(),
                 SaveGameProperty.parseAll(buffer, saveGamePropertyCount),
-                (byte) 1,
                 buffer.readUInt32(),
                 buffer.readUInt32(),
                 buffer.readUInt32(),
@@ -86,16 +98,18 @@ public class Building {
                 buffer.readFloat32(),
                 buffer.readFloat32(),
                 buffer.readByte(),
-                buffer.readFloat32()
+                buffer.readByte(),
+                buffer.readByte(),
+                buffer.readByte(),
+                count = buffer.readByte(),
+                count == 1 ? buffer.readInt32() : 0,
+                count == 1 ? buffer.readInt32() : 0,
+                count == 1 ? buffer.readInt32() : 0,
+                count == 1 ? buffer.readInt32() : 0,
+                buffer.readByte(),
+                buffer.readByte(),
+                buffer.readInt32(),
+                buffer.readByte()
         );
-
-        // Sanity check to ensure all data was read
-        // TODO: Encoding is slightly wrong with the "unknown 2" value - docs appear to be wrong.
-        // Need to figure out why this is.
-        // if (buffer.cursor() != building.size) {
-        //     System.err.println("Size did not match! Expected " + building.size + " but got " + buffer.cursor());
-        // }
-
-        return building;
     }
 }

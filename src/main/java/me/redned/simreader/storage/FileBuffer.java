@@ -70,9 +70,9 @@ public class FileBuffer {
         }
     }
 
-    public float readSingle() {
+    public float readFloat32() {
         try {
-            return Utils.readSingle(this.cursor, this.buffer);
+            return Utils.readFloat32(this.cursor, this.buffer);
         } finally {
             this.cursor += 4;
         }

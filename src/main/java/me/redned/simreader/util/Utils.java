@@ -2,8 +2,6 @@ package me.redned.simreader.util;
 
 import me.redned.simreader.storage.FileBuffer;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +12,7 @@ public class Utils {
             0x03, (data, buffer, len) ->  data.add(buffer.readUInt32()),
             0x07, (data, buffer, len) ->  data.add(buffer.readInt32()),
             0x08, (data, buffer, len) ->  data.add(buffer.readInt64()),
-            0x09, (data, buffer, len) ->  data.add(buffer.readSingle()),
+            0x09, (data, buffer, len) ->  data.add(buffer.readFloat32()),
             0x0B, (data, buffer, len) ->  data.add(buffer.readBoolean()),
             0x0C, (data, buffer, len) ->  data.add(buffer.readString(len))
     );
@@ -31,7 +29,7 @@ public class Utils {
         return (short) (((bytes[index + 1] & 0xFF) << 8) | (bytes[index] & 0xFF));
     }
 
-    public static float readSingle(int index, byte[] bytes) {
+    public static float readFloat32(int index, byte[] bytes) {
         return Float.intBitsToFloat(readInt32(index, bytes));
     }
 

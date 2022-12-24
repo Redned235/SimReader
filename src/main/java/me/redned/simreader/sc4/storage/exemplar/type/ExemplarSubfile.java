@@ -22,7 +22,7 @@ public class ExemplarSubfile {
             0x300, (data, buffer, len) -> data.add(buffer.readUInt32()),
             0x700, (data, buffer, len) -> data.add(buffer.readInt32()),
             0x800, (data, buffer, len) -> data.add(buffer.readInt64()),
-            0x900, (data, buffer, len) -> data.add(buffer.readSingle()),
+            0x900, (data, buffer, len) -> data.add(buffer.readFloat32()),
             0xB00, (data, buffer, len) -> data.add(buffer.readBoolean()),
             0xC00, (data, buffer, len) -> data.add(buffer.readString(len))
     );
