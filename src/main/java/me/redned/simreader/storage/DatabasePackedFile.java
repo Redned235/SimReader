@@ -1,5 +1,6 @@
 package me.redned.simreader.storage;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.redned.simreader.storage.compression.QFS;
 import me.redned.simreader.storage.model.IndexEntry;
@@ -20,9 +21,10 @@ public class DatabasePackedFile {
     protected final Map<PersistentResourceKey, IndexEntry> indexEntries = new HashMap<>();
     protected final Map<Integer, IndexEntry> entryByTypeCache = new WeakHashMap<>();
 
-    public void read() throws IOException {
-        System.out.println("Reading DBPF " + this.path + "...");
+    @Getter
+    protected DatabaseDirectoryFile directoryFile;
 
+    public void read() throws IOException {
         try (FileInputStream stream = new FileInputStream(this.path.toFile())) {
 
             byte[] headerBytes = new byte[100];
@@ -40,25 +42,23 @@ public class DatabasePackedFile {
                 this.indexEntries.put(entry.getResourceKey(), entry);
             }
 
-            System.out.println("Read " + this.indexEntries.size() + " entries!");
-
             IndexEntry dbdfEntry = this.indexEntries.get(ResourceKeys.DBDF);
             if (dbdfEntry == null) {
                 throw new IllegalArgumentException("Could not find Database Directory file!");
             }
 
-            DatabaseDirectoryFile dbdfFile = new DatabaseDirectoryFile(dbdfEntry);
+            DatabaseDirectoryFile directoryFile = new DatabaseDirectoryFile(dbdfEntry);
 
             stream.getChannel().position(dbdfEntry.getFileLocation());
-            for (int i = 0; i < dbdfFile.getResourceCount(); i++) {
+            for (int i = 0; i < directoryFile.getResourceCount(); i++) {
                 byte[] resourceBytes = new byte[16];
                 stream.read(resourceBytes, 0, 16);
 
                 DatabaseDirectoryResource resource = DatabaseDirectoryResource.parse(new FileBuffer(resourceBytes));
-                dbdfFile.addResource(resource);
+                directoryFile.addResource(resource);
             }
 
-            System.out.println("Read " + dbdfFile.getResources().size() + " resources!");
+            this.directoryFile = directoryFile;
         }
     }
 

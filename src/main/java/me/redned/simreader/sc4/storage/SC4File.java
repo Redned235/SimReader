@@ -38,33 +38,26 @@ public class SC4File extends DatabasePackedFile {
     private void readLots() throws IOException {
         IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.LOT_SUBFILE);
         if (entry == null) {
-            System.out.println("No lots");
             return;
         }
 
         byte[] lotFileData = this.getBytesAtIndex(entry);
         this.lotFile = LotSubfile.parse(lotFileData, lotFileData.length);
-
-        System.out.println("Read " + this.lotFile.getLots().size() + " lots!");
     }
 
     private void readBuildings() throws IOException {
         IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.BUILDING_SUBFILE);
         if (entry == null) {
-            System.out.println("No buildings");
             return;
         }
 
         byte[] buildingFileData = this.getBytesAtIndex(entry);
         this.buildingFile = BuildingSubfile.parse(buildingFileData, buildingFileData.length);
-
-        System.out.println("Read " + this.buildingFile.getBuildings().size() + " buildings!");
     }
 
     private void readRegionView() throws IOException {
         IndexEntry entry = this.getEntry(SC4ResourceKeys.REGION_VIEW);
         if (entry == null) {
-            System.out.println("No region info");
             return;
         }
 
