@@ -19,7 +19,6 @@ public class SaveGameProperty {
     private final byte valueType;
     private final byte keyType;
     private final short unknown2;
-    private final int dataRepeatedCount;
     private final List<Object> data;
 
     public static SaveGameProperty parse(FileBuffer buffer) {
@@ -30,12 +29,16 @@ public class SaveGameProperty {
         byte keyType = buffer.readByte();
         short unknown2 = buffer.readUInt16();
 
-        int dataRepeatedCount = 0;
         List<Object> data = new ArrayList<>();
-        if (keyType == Byte.MIN_VALUE) { // technically 0x80 but overflows in Java to Byte.MIN_VALUE
-            dataRepeatedCount = buffer.readUInt32();
-            for (int i = 0; i < dataRepeatedCount; i++) {
-                buffer.readValueType(data, valueType);
+        if ((keyType & 0xff) == 0x80) {
+            int count = buffer.readUInt32();
+            // String uses count to read string size
+            if (valueType == 0x0C) {
+                buffer.readValueType(data, valueType, count);
+            } else {
+                for (int i = 0; i < count; i++) {
+                    buffer.readValueType(data, valueType);
+                }
             }
         } else {
             buffer.readValueType(data, valueType);
@@ -48,7 +51,6 @@ public class SaveGameProperty {
                 valueType,
                 keyType,
                 unknown2,
-                dataRepeatedCount,
                 data
         );
     }

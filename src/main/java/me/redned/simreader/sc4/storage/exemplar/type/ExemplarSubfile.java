@@ -45,6 +45,15 @@ public class ExemplarSubfile {
         this.cohort = cohort;
     }
 
+    public Map<Integer, ExemplarProperty<?, ?>> getProperties() {
+        Map<Integer, ExemplarProperty<?, ?>> properties = new HashMap<>(this.properties);
+        if (this.cohort != null) {
+            properties.putAll(this.cohort.getProperties());
+        }
+
+        return properties;
+    }
+
     public <T extends ExemplarProperty<?, ?>> T getProperty(ExemplarPropertyTypes.Type<T> type) {
         ExemplarProperty<?, ?> property = this.properties.get(type.id());
         if (property == null) {

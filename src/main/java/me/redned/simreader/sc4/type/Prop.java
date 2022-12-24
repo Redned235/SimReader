@@ -102,13 +102,13 @@ public class Prop {
                 buffer.readByte(),
                 buffer.readByte(),
                 count = buffer.readByte(),
-                count == 1 ? buffer.readInt32() : 0,
-                count == 1 ? buffer.readInt32() : 0,
-                count == 1 ? buffer.readInt32() : 0,
-                count == 1 ? buffer.readInt32() : 0,
+                count == 1 ? buffer.readUInt32() : 0,
+                count == 1 ? buffer.readUInt32() : 0,
+                count == 1 ? buffer.readUInt32() : 0,
+                count == 1 ? buffer.readUInt32() : 0,
                 buffer.readByte(),
                 buffer.readByte(),
-                buffer.readInt32(),
+                buffer.readUInt32(),
                 buffer.readByte()
         );
     }

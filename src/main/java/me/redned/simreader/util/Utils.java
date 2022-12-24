@@ -18,11 +18,11 @@ public class Utils {
     );
 
     public static int readUInt32(int index, byte[] bytes) {
-        long result = (int) bytes[index] & 0xff;
-        result |= ((int) bytes[index + 1] & 0xff) << 8;
-        result |= ((int) bytes[index + 2] & 0xff) << 16;
-        result |= (long) ((int) bytes[index + 3] & 0xff) << 24;
-        return (int) (result & 0xFFFFFFFFL);
+        int result = bytes[index] & 0xff;
+        result |= (bytes[index + 1] & 0xff) << 8;
+        result |= (bytes[index + 2] & 0xff) << 16;
+        result |= (bytes[index + 3] & 0xff) << 24;
+        return result;
     }
 
     public static short readUInt16(int index, byte[] bytes) {
@@ -30,12 +30,12 @@ public class Utils {
     }
 
     public static float readFloat32(int index, byte[] bytes) {
-        return Float.intBitsToFloat(readInt32(index, bytes));
+        return Float.intBitsToFloat(readUInt32(index, bytes));
     }
 
     public static int readInt32(int index, byte[] bytes) {
-        return (0xff & bytes[index]) << 56 | (0xff & bytes[index + 1]) << 48
-                | (0xff & bytes[index + 2]) << 40 | (0xff & bytes[index + 3]) << 32;
+        return (0xff & bytes[index]) << 24 | (0xff & bytes[index + 1]) << 16
+                | (0xff & bytes[index + 2]) << 8 | (0xff & bytes[index + 3]);
     }
 
     public static long readInt64(int index, byte[] bytes) {

@@ -32,11 +32,11 @@ public class Building {
     private final short tractSizeZ;
     private final int saveGamePropertyCount;
     private final List<SaveGameProperty> properties;
-    private final byte unknown2;
     private final int groupId;
     private final int typeId;
     private final int instanceId;
     private final int instanceIdOnAppearance;
+    private final byte unknown2;
     private final float minCoordinateX;
     private final float minCoordinateY;
     private final float minCoordinateZ;
@@ -74,11 +74,11 @@ public class Building {
                 buffer.readUInt16(),
                 saveGamePropertyCount = buffer.readUInt32(),
                 SaveGameProperty.parseAll(buffer, saveGamePropertyCount),
-                (byte) 1,
                 buffer.readUInt32(),
                 buffer.readUInt32(),
                 buffer.readUInt32(),
                 buffer.readUInt32(),
+                buffer.readByte(),
                 buffer.readFloat32(),
                 buffer.readFloat32(),
                 buffer.readFloat32(),
@@ -90,11 +90,9 @@ public class Building {
         );
 
         // Sanity check to ensure all data was read
-        // TODO: Encoding is slightly wrong with the "unknown 2" value - docs appear to be wrong.
-        // Need to figure out why this is.
-        // if (buffer.cursor() != building.size) {
-        //     System.err.println("Size did not match! Expected " + building.size + " but got " + buffer.cursor());
-        // }
+        if (buffer.cursor() != building.size) {
+            System.err.println("Size did not match! Expected " + building.size + " but got " + buffer.cursor());
+        }
 
         return building;
     }

@@ -18,6 +18,8 @@ import java.util.WeakHashMap;
 @RequiredArgsConstructor
 public class DatabasePackedFile {
     protected final Path path;
+
+    @Getter
     protected final Map<PersistentResourceKey, IndexEntry> indexEntries = new HashMap<>();
     protected final Map<Integer, IndexEntry> entryByTypeCache = new WeakHashMap<>();
 
