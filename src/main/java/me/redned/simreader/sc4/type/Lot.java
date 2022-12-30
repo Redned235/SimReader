@@ -39,7 +39,7 @@ public class Lot {
     private final byte flagByte2;
     private final byte flagByte3;
 
-    private final LotZoneType zoneType;
+    private final byte zoneType;
     private final byte zoneWealth;
 
     private final int dateLotAppeared;
@@ -57,7 +57,7 @@ public class Lot {
                 buffer.readUInt32(),
                 buffer.readUInt32(),
                 buffer.readUInt16(),
-                buffer.readUInt16(),
+                buffer.readUInt32(),
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),
@@ -73,7 +73,7 @@ public class Lot {
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),
-                LotZoneType.values()[buffer.readByte()],
+                buffer.readByte(),
                 buffer.readByte(),
                 buffer.readUInt32(),
                 buffer.readUInt32(),

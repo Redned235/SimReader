@@ -5,6 +5,7 @@ public class SC4ResourceTypes {
     public static final int LOT_SUBFILE = (int) Long.parseLong("C9BD5D4A", 16);
     public static final int BUILDING_SUBFILE = (int) Long.parseLong("A9BD882D", 16);
     public static final int PROP_SUBFILE = (int) Long.parseLong("2977AA47", 16);
+    public static final int FLORA_SUBFILE = (int) Long.parseLong("A9C05C85", 16);
     public static final int NETWORK_INDEX = (int) Long.parseLong("6A0F82B2", 16);
     public static final int NETWORK_SUBFILE_1 = (int) Long.parseLong("C9C05C6E", 16);
     public static final int NETWORK_SUBFILE_2 = (int) Long.parseLong("CA16374F", 16);
