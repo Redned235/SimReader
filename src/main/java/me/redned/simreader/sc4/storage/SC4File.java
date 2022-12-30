@@ -28,12 +28,14 @@ public class SC4File extends DatabasePackedFile {
     private RegionViewSubfile regionViewFile;
     private TerrainSubfile terrainFile;
 
-    public SC4File(Path path) {
+    public SC4File(Path path) throws IOException {
         super(path);
+
+        this.read();
     }
 
     @Override
-    public void read() throws IOException {
+    protected void read() throws IOException {
         super.read();
 
         this.readLots();

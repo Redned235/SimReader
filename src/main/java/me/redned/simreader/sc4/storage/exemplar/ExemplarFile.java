@@ -25,11 +25,13 @@ public class ExemplarFile extends DatabasePackedFile {
     private final Map<PersistentResourceKey, ExemplarSubfile> exemplarFiles = new HashMap<>();
     private final Map<PersistentResourceKey, CohortSubfile> cohortFiles = new HashMap<>();
 
-    public ExemplarFile(Path path) {
+    public ExemplarFile(Path path) throws IOException {
         super(path);
+
+        this.read();
     }
 
-    public void read() throws IOException {
+    protected void read() throws IOException {
         super.read();
 
         for (Map.Entry<PersistentResourceKey, IndexEntry> entry : this.indexEntries.entrySet()) {
@@ -49,7 +51,7 @@ public class ExemplarFile extends DatabasePackedFile {
         this.buildCohortTree();
     }
 
-    public void buildCohortTree() {
+    private void buildCohortTree() {
         // Add exemplar files to cohorts
         for (Map.Entry<PersistentResourceKey, ExemplarSubfile> entry : this.exemplarFiles.entrySet()) {
             PersistentResourceKey cohortKey = entry.getValue().getCohortResourceKey();

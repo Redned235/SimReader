@@ -1,11 +1,9 @@
 package me.redned.simreader.storage;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import me.redned.simreader.storage.compression.QFS;
 import me.redned.simreader.storage.model.IndexEntry;
 import me.redned.simreader.storage.model.PersistentResourceKey;
-import me.redned.simreader.util.Utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-@RequiredArgsConstructor
 public class DatabasePackedFile {
     protected final Path path;
 
@@ -26,7 +23,11 @@ public class DatabasePackedFile {
     @Getter
     protected DatabaseDirectoryFile directoryFile;
 
-    public void read() throws IOException {
+    public DatabasePackedFile(Path path) {
+        this.path = path;
+    }
+
+    protected void read() throws IOException {
         try (FileInputStream stream = new FileInputStream(this.path.toFile())) {
 
             byte[] headerBytes = new byte[100];
@@ -88,10 +89,6 @@ public class DatabasePackedFile {
         }
 
         return compressedBytes;
-    }
-
-    protected boolean isCompressed(IndexEntry entry) {
-        return this.indexEntries.containsKey(entry.getResourceKey());
     }
 
     protected byte[] getRawBytesAtIndex(IndexEntry entry) throws IOException {
