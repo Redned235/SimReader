@@ -28,6 +28,38 @@ for (Building building : file.getBuildingFile().getBuildings()) {
 }
 ```
 
+## Repository
+
+### Gradle
+```kotlin
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.Redned235:SimReader:master-SNAPSHOT")
+}
+```
+
+### Maven:
+```xml
+<repositories>
+    <repository>
+        <id>jitpack</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.Redned235</groupId>
+        <artifactId>SimReader</artifactId>
+        <version>master-SNAPSHOT</version>
+        <scope>compile</scope>
+    </dependency>
+</dependencies>
+```
+
 ## Credits
 Much of this project would not be possible without the following resources & repositories:
 - [SC4Devotion Wiki](https://wiki.sc4devotion.com/)
