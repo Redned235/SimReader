@@ -6,6 +6,8 @@ import me.redned.simreader.sc4.SC4ResourceTypes;
 import me.redned.simreader.sc4.storage.type.BuildingSubfile;
 import me.redned.simreader.sc4.storage.type.FloraSubfile;
 import me.redned.simreader.sc4.storage.type.LotSubfile;
+import me.redned.simreader.sc4.storage.type.NetworkTile1Subfile;
+import me.redned.simreader.sc4.storage.type.NetworkTile2Subfile;
 import me.redned.simreader.sc4.storage.type.PropSubfile;
 import me.redned.simreader.sc4.storage.type.RegionViewSubfile;
 import me.redned.simreader.sc4.storage.type.TerrainSubfile;
@@ -27,6 +29,8 @@ public class SC4File extends DatabasePackedFile {
     private FloraSubfile floraFile;
     private RegionViewSubfile regionViewFile;
     private TerrainSubfile terrainFile;
+    private NetworkTile1Subfile networkTile1File;
+    private NetworkTile2Subfile networkTile2File;
 
     public SC4File(Path path) throws IOException {
         super(path);
@@ -44,6 +48,8 @@ public class SC4File extends DatabasePackedFile {
         this.readFlora();
         this.readRegionView();
         this.readTerrain();
+        this.readNetworkTile1();
+        this.readNetworkTile2();
     }
 
     private void readLots() throws IOException {
@@ -109,5 +115,25 @@ public class SC4File extends DatabasePackedFile {
 
         byte[] terrainFileData = this.getBytesAtIndex(entry);
         this.terrainFile = TerrainSubfile.parse(new FileBuffer(terrainFileData), this.regionViewFile.getCitySizeX(), this.regionViewFile.getCitySizeY());
+    }
+
+    private void readNetworkTile1() throws IOException {
+        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.NETWORK_SUBFILE_1);
+        if (entry == null) {
+            return;
+        }
+
+        byte[] networkTileData = this.getBytesAtIndex(entry);
+        this.networkTile1File = NetworkTile1Subfile.parse(networkTileData, networkTileData.length);
+    }
+
+    private void readNetworkTile2() throws IOException {
+        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.NETWORK_SUBFILE_2);
+        if (entry == null) {
+            return;
+        }
+
+        byte[] networkTileData = this.getBytesAtIndex(entry);
+        this.networkTile2File = NetworkTile2Subfile.parse(networkTileData, networkTileData.length);
     }
 }

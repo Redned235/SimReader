@@ -7,6 +7,7 @@ import me.redned.simreader.util.Utils;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -100,6 +101,12 @@ public class FileBuffer {
 
     public void readValueType(Map<Integer, Utils.ValueTypeReader> dataReaders, List<Object> data, int valueType, int strLen) {
         Utils.readValueType(dataReaders, this, data, valueType, strLen);
+    }
+
+    public <T> T readAndSkip(Supplier<T> reader, int toSkip) {
+        T value = reader.get();
+        this.skip(toSkip);
+        return value;
     }
 
     public void skip(int amount) {
