@@ -46,7 +46,7 @@ public class NetworkTile2 {
     private final NetworkTilePosition tilePosition4;
     private final int textureId;
     private final byte orientation;
-    private final byte networkType;
+    private final NetworkType networkType;
     private final byte connectionWest;
     private final byte connectionNorth;
     private final byte connectionEast;
@@ -97,7 +97,7 @@ public class NetworkTile2 {
                 NetworkTilePosition.parse(buffer),
                 buffer.readAndSkip(buffer::readUInt32, 5),
                 buffer.readAndSkip(buffer::readByte, 3),
-                buffer.readByte(),
+                NetworkType.byId(buffer.readByte()),
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),

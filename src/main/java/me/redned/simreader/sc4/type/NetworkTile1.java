@@ -44,7 +44,7 @@ public class NetworkTile1 {
     private final TextureDrawing texture4;
     private final int textureId;
     private final byte orientation;
-    private final byte networkType;
+    private final NetworkType networkType;
     private final byte connectionWest;
     private final byte connectionNorth;
     private final byte connectionEast;
@@ -98,7 +98,7 @@ public class NetworkTile1 {
                 TextureDrawing.parse(buffer),
                 buffer.readAndSkip(buffer::readUInt32, 5),
                 buffer.readAndSkip(buffer::readByte, 3),
-                buffer.readByte(),
+                NetworkType.byId(buffer.readByte()),
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),

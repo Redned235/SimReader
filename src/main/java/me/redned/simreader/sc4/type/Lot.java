@@ -39,8 +39,8 @@ public class Lot {
     private final byte flagByte2;
     private final byte flagByte3;
 
-    private final byte zoneType;
-    private final byte zoneWealth;
+    private final LotZoneType zoneType;
+    private final LotZoneWealth zoneWealth;
 
     private final int dateLotAppeared;
     private final int buildingInstanceId;
@@ -73,8 +73,8 @@ public class Lot {
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),
-                buffer.readByte(),
-                buffer.readByte(),
+                LotZoneType.byId(buffer.readByte()),
+                LotZoneWealth.byId(buffer.readByte()),
                 buffer.readUInt32(),
                 buffer.readUInt32(),
                 buffer.readByte()
