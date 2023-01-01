@@ -103,7 +103,16 @@ public class NetworkTile1 {
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),
-                buffer.readAndSkip(buffer::readByte, 3),
+                buffer.readAndRun(buffer::readByte, crossingFlag -> {
+                    if (crossingFlag == 0x03) {
+                        // Apparently there are hundreds of bytes that can be here and how to properly parse
+                        // them is unknown. Just set the current cursor to the max minus the known byte count
+                        // from the next position.
+                        buffer.position(buffer.size() - 55);
+                    }
+
+                    buffer.skip(3);
+                }),
                 buffer.readFloat32(),
                 buffer.readFloat32(),
                 buffer.readFloat32(),

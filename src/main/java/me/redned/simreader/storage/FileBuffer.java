@@ -7,6 +7,7 @@ import me.redned.simreader.util.Utils;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @AllArgsConstructor
@@ -109,8 +110,18 @@ public class FileBuffer {
         return value;
     }
 
+    public <T> T readAndRun(Supplier<T> reader, Consumer<T> valueConsumer) {
+        T value = reader.get();
+        valueConsumer.accept(value);
+        return value;
+    }
+
     public void skip(int amount) {
         this.cursor += amount;
+    }
+
+    public void position(int amount) {
+        this.cursor = amount;
     }
 
     public int cursor() {
