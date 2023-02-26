@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.redned.simreader.sc4.type.lot.LotZoneType;
+import me.redned.simreader.sc4.type.lot.LotZoneWealth;
 import me.redned.simreader.storage.FileBuffer;
 
 @ToString

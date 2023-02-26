@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.redned.simreader.sc4.type.network.NetworkType;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.storage.model.SaveGameProperty;
 

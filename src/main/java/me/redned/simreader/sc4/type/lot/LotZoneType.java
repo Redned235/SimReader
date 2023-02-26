@@ -1,4 +1,4 @@
-package me.redned.simreader.sc4.type;
+package me.redned.simreader.sc4.type.lot;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

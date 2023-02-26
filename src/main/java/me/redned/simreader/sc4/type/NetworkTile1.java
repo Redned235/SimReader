@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.redned.simreader.sc4.type.network.NetworkBaseTexture;
+import me.redned.simreader.sc4.type.network.NetworkType;
+import me.redned.simreader.sc4.type.network.NetworkWealthTexture;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.storage.model.SaveGameProperty;
 
@@ -43,6 +46,8 @@ public class NetworkTile1 {
     private final TextureDrawing texture3;
     private final TextureDrawing texture4;
     private final int textureId;
+    private final NetworkWealthTexture wealthTexture;
+    private final NetworkBaseTexture baseTexture;
     private final byte orientation;
     private final NetworkType networkType;
     private final byte connectionWest;
@@ -56,10 +61,9 @@ public class NetworkTile1 {
     private final float maxCoordinateY;
     private final float minCoordinateZ;
     private final float maxCoordinateZ;
-    private final byte unknown3;
-    private final byte roadConstructionFlag;
-    private final byte unknown4;
-    private final byte roadConstructionFlag2;
+    private final int constructionState;
+    private final int alternatePathId;
+    private final int demolishingCost;
 
     public static NetworkTile1 parse(FileBuffer buffer) {
         int offset = buffer.cursor();
@@ -96,7 +100,9 @@ public class NetworkTile1 {
                 TextureDrawing.parse(buffer),
                 TextureDrawing.parse(buffer),
                 TextureDrawing.parse(buffer),
-                buffer.readAndSkip(buffer::readUInt32, 5),
+                buffer.readUInt32(),
+                NetworkWealthTexture.byId(buffer.readByte()),
+                NetworkBaseTexture.byId(buffer.readUInt32()),
                 buffer.readAndSkip(buffer::readByte, 3),
                 NetworkType.byId(buffer.readByte()),
                 buffer.readByte(),
@@ -119,10 +125,9 @@ public class NetworkTile1 {
                 buffer.readFloat32(),
                 buffer.readFloat32(),
                 buffer.readFloat32(),
-                buffer.readByte(),
-                buffer.readByte(),
-                buffer.readByte(),
-                buffer.readByte()
+                buffer.readUInt32(),
+                buffer.readAndSkip(buffer::readUInt32, 12),
+                buffer.readAndSkip(buffer::readUInt32, 4)
         );
     }
 
