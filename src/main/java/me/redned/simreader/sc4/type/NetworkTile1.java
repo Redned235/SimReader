@@ -49,12 +49,13 @@ public class NetworkTile1 {
     private final NetworkWealthTexture wealthTexture;
     private final NetworkBaseTexture baseTexture;
     private final byte orientation;
+    private final byte crossingFlag;
     private final NetworkType networkType;
     private final byte connectionWest;
     private final byte connectionNorth;
     private final byte connectionEast;
     private final byte connectionSouth;
-    private final byte crossingFlag;
+    private final byte retainingWalls;
     private final float minCoordinateX;
     private final float maxCoordinateX;
     private final float minCoordinateY;
@@ -103,14 +104,15 @@ public class NetworkTile1 {
                 buffer.readUInt32(),
                 NetworkWealthTexture.byId(buffer.readByte()),
                 NetworkBaseTexture.byId(buffer.readUInt32()),
-                buffer.readAndSkip(buffer::readByte, 3),
+                buffer.readAndSkip(buffer::readByte, 2),
+                buffer.readByte(),
                 NetworkType.byId(buffer.readByte()),
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readByte(),
-                buffer.readAndRun(buffer::readByte, crossingFlag -> {
-                    if (crossingFlag == 0x03) {
+                buffer.readAndRun(buffer::readByte, retainingWalls -> {
+                    if (retainingWalls != 0) {
                         // Apparently there are hundreds of bytes that can be here and how to properly parse
                         // them is unknown. Just set the current cursor to the max minus the known byte count
                         // from the next position.
