@@ -1,6 +1,8 @@
 package me.redned.simreader.sc4.storage.exemplar.property;
 
 import me.redned.simreader.sc4.storage.exemplar.property.type.BooleanProperty;
+import me.redned.simreader.sc4.storage.exemplar.property.type.Float32Property;
+import me.redned.simreader.sc4.storage.exemplar.property.type.OccupantGroupTypesProperty;
 import me.redned.simreader.sc4.storage.exemplar.property.type.ResourceKeyProperty;
 import me.redned.simreader.sc4.storage.exemplar.property.type.StringProperty;
 import me.redned.simreader.sc4.storage.exemplar.property.type.UInt32Property;
@@ -41,6 +43,14 @@ public class ExemplarPropertyTypes {
     public static final Type<UInt32Property.Multi> RESOURCE_KEY_TYPE_3XM = new Type<>(0x27812923, 7, UInt32Property.Multi.class, UInt32Property.Multi::new);
     public static final Type<UInt32Property.Multi> RESOURCE_KEY_TYPE_4XM = new Type<>(0x27812924, -1, UInt32Property.Multi.class, UInt32Property.Multi::new);
     public static final Type<ResourceKeyProperty> RESOURCE_KEY_TYPE_5XM = new Type<>(0x27812925, ResourceKeyProperty.class, ResourceKeyProperty::new);
+
+    // Lot Retaining Wall
+    public static final Type<UInt32Property.Multi> RETAINING_WALL_TEXTURE = new Type<>(0x295961f2, -1, UInt32Property.Multi.class, UInt32Property.Multi::new);
+    public static final Type<Float32Property.Single> RETAINING_WALL_TEXTURE_SIZE = new Type<>(0x295961f3, Float32Property.Single.class, Float32Property.Single::new);
+
+    // Miscellaneous Occupant
+    public static final Type<OccupantGroupTypesProperty> OCCUPANT_GROUPS = new Type<>(0xaa1dd396, -1, OccupantGroupTypesProperty.class, OccupantGroupTypesProperty::new);
+
 
     private static final Type<UnmappedExemplarProperty> UNMAPPED = new Type<>(-1, UnmappedExemplarProperty.class, UnmappedExemplarProperty::new);
 

@@ -53,7 +53,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readLots() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.LOT_SUBFILE);
+        IndexEntry entry = this.getFirstEntryFromType(SC4ResourceTypes.LOT_SUBFILE);
         if (entry == null) {
             return;
         }
@@ -63,7 +63,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readBuildings() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.BUILDING_SUBFILE);
+        IndexEntry entry = this.getFirstEntryFromType(SC4ResourceTypes.BUILDING_SUBFILE);
         if (entry == null) {
             return;
         }
@@ -73,7 +73,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readProps() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.PROP_SUBFILE);
+        IndexEntry entry = this.getFirstEntryFromType(SC4ResourceTypes.PROP_SUBFILE);
         if (entry == null) {
             return;
         }
@@ -83,7 +83,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readFlora() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.FLORA_SUBFILE);
+        IndexEntry entry = this.getFirstEntryFromType(SC4ResourceTypes.FLORA_SUBFILE);
         if (entry == null) {
             return;
         }
@@ -118,7 +118,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readNetworkTile1() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.NETWORK_SUBFILE_1);
+        IndexEntry entry = this.getFirstEntryFromType(SC4ResourceTypes.NETWORK_SUBFILE_1);
         if (entry == null) {
             return;
         }
@@ -128,7 +128,7 @@ public class SC4File extends DatabasePackedFile {
     }
 
     private void readNetworkTile2() throws IOException {
-        IndexEntry entry = this.getEntryFromType(SC4ResourceTypes.NETWORK_SUBFILE_2);
+        IndexEntry entry = this.getFirstEntryFromType(SC4ResourceTypes.NETWORK_SUBFILE_2);
         if (entry == null) {
             return;
         }

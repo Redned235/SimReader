@@ -9,7 +9,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -69,7 +71,7 @@ public class DatabasePackedFile {
         return this.indexEntries.get(key);
     }
 
-    public IndexEntry getEntryFromType(int type) {
+    public IndexEntry getFirstEntryFromType(int type) {
         return this.entryByTypeCache.computeIfAbsent(type, e -> {
             for (Map.Entry<PersistentResourceKey, IndexEntry> entry : this.indexEntries.entrySet()) {
                 if (entry.getKey().getType() == type) {
@@ -79,6 +81,17 @@ public class DatabasePackedFile {
 
             return null;
         });
+    }
+
+    public List<IndexEntry> getEntriesFromType(int type) {
+        List<IndexEntry> entries = new ArrayList<>();
+        for (Map.Entry<PersistentResourceKey, IndexEntry> entry : this.indexEntries.entrySet()) {
+            if (entry.getValue().getResourceKey().getType() == type) {
+                entries.add(entry.getValue());
+            }
+        }
+
+        return entries;
     }
 
     public byte[] getBytesAtIndex(IndexEntry entry) throws IOException {
