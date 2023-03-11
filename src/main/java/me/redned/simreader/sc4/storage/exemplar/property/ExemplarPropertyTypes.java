@@ -44,6 +44,9 @@ public class ExemplarPropertyTypes {
     public static final Type<UInt32Property.Multi> RESOURCE_KEY_TYPE_4XM = new Type<>(0x27812924, -1, UInt32Property.Multi.class, UInt32Property.Multi::new);
     public static final Type<ResourceKeyProperty> RESOURCE_KEY_TYPE_5XM = new Type<>(0x27812925, ResourceKeyProperty.class, ResourceKeyProperty::new);
 
+    // Lot
+    public static final Type<UInt32Property.Multi> LOT_TYPE = new Type<>(0x88EDCDFF, -1, UInt32Property.Multi.class, UInt32Property.Multi::new);
+
     // Lot Retaining Wall
     public static final Type<UInt32Property.Multi> RETAINING_WALL_TEXTURE = new Type<>(0x295961f2, -1, UInt32Property.Multi.class, UInt32Property.Multi::new);
     public static final Type<Float32Property.Single> RETAINING_WALL_TEXTURE_SIZE = new Type<>(0x295961f3, Float32Property.Single.class, Float32Property.Single::new);

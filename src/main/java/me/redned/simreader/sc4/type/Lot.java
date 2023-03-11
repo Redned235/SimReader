@@ -25,10 +25,10 @@ public class Lot {
 
     private final byte flagByte1;
 
-    private final byte minTileX;
-    private final byte minTileZ;
-    private final byte maxTileX;
-    private final byte maxTileZ;
+    private final int minTileX;
+    private final int minTileZ;
+    private final int maxTileX;
+    private final int maxTileZ;
 
     private final byte commuteTileX;
     private final byte commuteTileZ;
@@ -96,10 +96,10 @@ public class Lot {
                 buffer.readUInt16(),
                 buffer.readUInt32(),
                 buffer.readByte(),
-                buffer.readByte(),
-                buffer.readByte(),
-                buffer.readByte(),
-                buffer.readByte(),
+                buffer.readUByte(),
+                buffer.readUByte(),
+                buffer.readUByte(),
+                buffer.readUByte(),
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readFloat32(),

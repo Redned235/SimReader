@@ -21,6 +21,10 @@ public class FileBuffer {
         return this.buffer[this.cursor++];
     }
 
+    public int readUByte() {
+        return this.buffer[this.cursor++] & 0xFF;
+    }
+
     public byte[] readBytes(int length) {
         byte[] bytes = new byte[length];
         System.arraycopy(this.buffer, this.cursor, bytes, 0, length);
