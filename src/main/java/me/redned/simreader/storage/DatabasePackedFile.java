@@ -5,8 +5,9 @@ import me.redned.simreader.storage.compression.QFS;
 import me.redned.simreader.storage.model.IndexEntry;
 import me.redned.simreader.storage.model.PersistentResourceKey;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -30,20 +31,19 @@ public class DatabasePackedFile {
     }
 
     protected void read() throws IOException {
-        try (FileInputStream stream = new FileInputStream(this.path.toFile())) {
+        try (FileChannel channel = FileChannel.open(this.path)) {
+            ByteBuffer headerBytes = ByteBuffer.allocate(96);
+            channel.read(headerBytes);
 
-            byte[] headerBytes = new byte[100];
-            stream.read(headerBytes, 0, 96);
+            Header header = new Header(new FileBuffer(headerBytes.array()));
 
-            Header header = new Header(new FileBuffer(headerBytes));
-
-            stream.getChannel().position(header.firstIndexOffset);
+            channel.position(header.firstIndexOffset);
 
             for (int i = 0; i < header.indexCount; i++) {
-                byte[] indexBytes = new byte[20];
+                ByteBuffer indexBytes = ByteBuffer.allocate(20);
 
-                stream.read(indexBytes, 0, 20);
-                IndexEntry entry = IndexEntry.parse(new FileBuffer(indexBytes));
+                channel.read(indexBytes);
+                IndexEntry entry = IndexEntry.parse(new FileBuffer(indexBytes.array()));
                 this.indexEntries.put(entry.getResourceKey(), entry);
             }
 
@@ -54,12 +54,12 @@ public class DatabasePackedFile {
 
             DatabaseDirectoryFile directoryFile = new DatabaseDirectoryFile(dbdfEntry);
 
-            stream.getChannel().position(dbdfEntry.getFileLocation());
+            channel.position(dbdfEntry.getFileLocation());
             for (int i = 0; i < directoryFile.getResourceCount(); i++) {
-                byte[] resourceBytes = new byte[16];
-                stream.read(resourceBytes, 0, 16);
+                ByteBuffer resourceBytes = ByteBuffer.allocate(16);
+                channel.read(resourceBytes);
 
-                DatabaseDirectoryResource resource = DatabaseDirectoryResource.parse(new FileBuffer(resourceBytes));
+                DatabaseDirectoryResource resource = DatabaseDirectoryResource.parse(new FileBuffer(resourceBytes.array()));
                 directoryFile.addResource(resource);
             }
 
@@ -105,14 +105,14 @@ public class DatabasePackedFile {
     }
 
     protected byte[] getRawBytesAtIndex(IndexEntry entry) throws IOException {
-        try (FileInputStream stream = new FileInputStream(this.path.toFile())) {
+        try (FileChannel channel = FileChannel.open(this.path)) {
             int fileSize = entry.getFileSize();
 
-            stream.getChannel().position(entry.getFileLocation());
+            channel.position(entry.getFileLocation());
 
-            byte[] bytes = new byte[fileSize];
-            stream.read(bytes, 0, fileSize);
-            return bytes;
+            ByteBuffer bytes = ByteBuffer.allocate(fileSize);
+            channel.read(bytes);
+            return bytes.array();
         }
     }
 
