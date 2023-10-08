@@ -2,12 +2,15 @@ package me.redned.simreader.storage;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import me.redned.simreader.sc4.DecodingFormat;
+import me.redned.simreader.sc4.storage.SC4File;
 import me.redned.simreader.util.Utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @AllArgsConstructor
@@ -15,6 +18,7 @@ import java.util.function.Supplier;
 public class FileBuffer {
     private final byte[] buffer;
 
+    private SC4File sc4File;
     private int cursor;
 
     public byte readByte() {
@@ -110,7 +114,7 @@ public class FileBuffer {
 
     public <T> T readAndSkip(Supplier<T> reader, int toSkip) {
         T value = reader.get();
-        this.skip(toSkip);
+        this.offset(toSkip);
         return value;
     }
 
@@ -120,7 +124,53 @@ public class FileBuffer {
         return value;
     }
 
-    public void skip(int amount) {
+    public <T> T readAndSkipIf(Supplier<T> reader, Predicate<FileBuffer> predicate, int toSkip) {
+        T value = reader.get();
+        if (predicate.test(this)) {
+            this.offset(toSkip);
+        }
+        return value;
+    }
+
+    public <T> T sc4ReadAspyrSafe(Supplier<T> reader, int toSkip) {
+        if (this.sc4File == null) {
+            throw new IllegalArgumentException("Cannot read SC4 data without an SC4File in the buffer!");
+        }
+
+        T value = reader.get();
+        if (Utils.ASYPR_EXTRA_DATA_PREDICATE.test(this)) {
+            if (this.sc4File.getDecodingFormat() == DecodingFormat.WINDOWS) {
+                throw new IllegalArgumentException("Got jumbled data inside SC4File! Encountered macOS data but format was set to Windows!");
+            }
+
+            this.sc4File.setDecodingFormat(DecodingFormat.MACOS);
+            this.offset(toSkip);
+        } else {
+            if (this.sc4File.getDecodingFormat() == DecodingFormat.MACOS) {
+                throw new IllegalArgumentException("Got jumbled data inside SC4File! Encountered Windows data but format was set to macOS!");
+            }
+
+            this.sc4File.setDecodingFormat(DecodingFormat.WINDOWS);
+        }
+
+        return value;
+    }
+
+    public <T> T reader(Supplier<T> reader) {
+        return reader.get();
+    }
+
+    public <T> T peek(Supplier<T> reader) {
+        int cursor = this.cursor;
+        try {
+            T value = reader.get();
+            return value;
+        } finally {
+            this.cursor = cursor;
+        }
+    }
+
+    public void offset(int amount) {
         this.cursor += amount;
     }
 

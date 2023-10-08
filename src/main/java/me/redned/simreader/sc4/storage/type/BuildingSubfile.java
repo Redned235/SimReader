@@ -2,9 +2,10 @@ package me.redned.simreader.sc4.storage.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.redned.simreader.util.Utils;
-import me.redned.simreader.storage.FileBuffer;
+import me.redned.simreader.sc4.storage.SC4File;
 import me.redned.simreader.sc4.type.Building;
+import me.redned.simreader.storage.FileBuffer;
+import me.redned.simreader.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public class BuildingSubfile {
     private final List<Building> buildings;
 
-    public static BuildingSubfile parse(byte[] bytes, int size) {
+    public static BuildingSubfile parse(SC4File sc4File, byte[] bytes, int size) {
         List<Building> buildings = new ArrayList<>();
 
         int offset = 0;
@@ -24,7 +25,7 @@ public class BuildingSubfile {
             byte[] buildingBytes = new byte[currentSize];
             System.arraycopy(bytes, offset, buildingBytes, 0, currentSize);
 
-            Building building = Building.parse(new FileBuffer(buildingBytes, offset));
+            Building building = Building.parse(new FileBuffer(buildingBytes, sc4File, offset));
             buildings.add(building);
 
             offset += currentSize;

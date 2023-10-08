@@ -1,6 +1,8 @@
 package me.redned.simreader.sc4.storage;
 
 import lombok.Getter;
+import lombok.Setter;
+import me.redned.simreader.sc4.DecodingFormat;
 import me.redned.simreader.sc4.SC4ResourceKeys;
 import me.redned.simreader.sc4.SC4ResourceTypes;
 import me.redned.simreader.sc4.storage.type.BuildingSubfile;
@@ -32,8 +34,17 @@ public class SC4File extends DatabasePackedFile {
     private NetworkTile1Subfile networkTile1File;
     private NetworkTile2Subfile networkTile2File;
 
+    @Setter
+    private DecodingFormat decodingFormat;
+
     public SC4File(Path path) throws IOException {
+        this(path, DecodingFormat.AUTODETECT_FORMAT);
+    }
+
+    public SC4File(Path path, DecodingFormat decodingFormat) throws IOException {
         super(path);
+
+        this.decodingFormat = decodingFormat;
 
         this.read();
     }
@@ -42,7 +53,6 @@ public class SC4File extends DatabasePackedFile {
     protected void read() throws IOException {
         super.read();
 
-        this.readLots();
         this.readBuildings();
         this.readProps();
         this.readFlora();
@@ -50,6 +60,13 @@ public class SC4File extends DatabasePackedFile {
         this.readTerrain();
         this.readNetworkTile1();
         this.readNetworkTile2();
+
+        if (this.decodingFormat == DecodingFormat.AUTODETECT_FORMAT) {
+            System.out.println("Format could not be detected automatically before parsing lots. Defaulting to Windows...");
+            this.decodingFormat = DecodingFormat.WINDOWS;
+        }
+
+        this.readLots();
     }
 
     private void readLots() throws IOException {
@@ -59,7 +76,7 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] lotFileData = this.getBytesAtIndex(entry);
-        this.lotFile = LotSubfile.parse(lotFileData, lotFileData.length);
+        this.lotFile = LotSubfile.parse(this, lotFileData, lotFileData.length);
     }
 
     private void readBuildings() throws IOException {
@@ -69,7 +86,7 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] buildingFileData = this.getBytesAtIndex(entry);
-        this.buildingFile = BuildingSubfile.parse(buildingFileData, buildingFileData.length);
+        this.buildingFile = BuildingSubfile.parse(this, buildingFileData, buildingFileData.length);
     }
 
     private void readProps() throws IOException {
@@ -79,7 +96,7 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] propFileData = this.getBytesAtIndex(entry);
-        this.propFile = PropSubfile.parse(propFileData, propFileData.length);
+        this.propFile = PropSubfile.parse(this, propFileData, propFileData.length);
     }
 
     private void readFlora() throws IOException {
@@ -89,7 +106,7 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] floraFileData = this.getBytesAtIndex(entry);
-        this.floraFile = FloraSubfile.parse(floraFileData, floraFileData.length);
+        this.floraFile = FloraSubfile.parse(this, floraFileData, floraFileData.length);
     }
 
     private void readRegionView() throws IOException {
@@ -124,7 +141,7 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] networkTileData = this.getBytesAtIndex(entry);
-        this.networkTile1File = NetworkTile1Subfile.parse(networkTileData, networkTileData.length);
+        this.networkTile1File = NetworkTile1Subfile.parse(this, networkTileData, networkTileData.length);
     }
 
     private void readNetworkTile2() throws IOException {
@@ -134,6 +151,6 @@ public class SC4File extends DatabasePackedFile {
         }
 
         byte[] networkTileData = this.getBytesAtIndex(entry);
-        this.networkTile2File = NetworkTile2Subfile.parse(networkTileData, networkTileData.length);
+        this.networkTile2File = NetworkTile2Subfile.parse(this, networkTileData, networkTileData.length);
     }
 }

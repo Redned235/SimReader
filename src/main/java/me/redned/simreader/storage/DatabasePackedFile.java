@@ -141,7 +141,7 @@ public class DatabasePackedFile {
             this.majorVersion = buffer.readUInt32();
             this.minorVersion = buffer.readUInt32();
 
-            buffer.skip(12);
+            buffer.offset(12);
 
             this.dateCreated = Instant.ofEpochMilli(buffer.readUInt32());
             this.lastModified = Instant.ofEpochMilli(buffer.readUInt32());

@@ -84,7 +84,7 @@ public class Prop {
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readUInt16(),
-                buffer.readUInt16(),
+                buffer.sc4ReadAspyrSafe(buffer::readUInt16, 4),
                 saveGamePropertyCount = buffer.readUInt32(),
                 SaveGameProperty.parseAll(buffer, saveGamePropertyCount),
                 buffer.readUInt32(),

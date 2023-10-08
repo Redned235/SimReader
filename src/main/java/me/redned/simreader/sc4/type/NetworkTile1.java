@@ -87,7 +87,7 @@ public class NetworkTile1 {
                 buffer.readByte(),
                 buffer.readByte(),
                 buffer.readUInt16(),
-                buffer.readUInt16(),
+                buffer.sc4ReadAspyrSafe(buffer::readUInt16, 4),
                 saveGamePropertyCount = buffer.readUInt32(),
                 SaveGameProperty.parseAll(buffer, saveGamePropertyCount),
                 buffer.readUInt32(),
@@ -119,7 +119,7 @@ public class NetworkTile1 {
                         buffer.position(buffer.size() - 55);
                     }
 
-                    buffer.skip(3);
+                    buffer.offset(3);
                 }),
                 buffer.readFloat32(),
                 buffer.readFloat32(),

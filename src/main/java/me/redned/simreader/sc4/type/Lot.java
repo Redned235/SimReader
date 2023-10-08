@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.redned.simreader.sc4.DecodingFormat;
 import me.redned.simreader.sc4.type.lot.LotZoneType;
 import me.redned.simreader.sc4.type.lot.LotZoneWealth;
 import me.redned.simreader.storage.FileBuffer;
@@ -59,12 +60,10 @@ public class Lot {
     private final int linkedAnchorLot;
     private final int anchorLotTypeId;
 
-    private final byte count; // ???
-
-    private final byte rciCount;
+    private final byte count;
     private final List<RCI> rcis;
 
-    private final byte rciCount2;
+    private final byte rciCount;
     private final List<RCI> rcis2;
     // private final int demandSourceIndex;
     // private final short totalCapacity;
@@ -78,7 +77,7 @@ public class Lot {
     private final int saveGamePropertyCount;
     private final List<SaveGameProperty> properties;
 
-    public static Lot parse(FileBuffer buffer) {
+    public static Lot parse(DecodingFormat format, FileBuffer buffer) {
         int offset = buffer.cursor();
         buffer.resetCursor();
 
@@ -86,7 +85,6 @@ public class Lot {
         int linkedAnchorLot;
         byte count;
         byte rciCount;
-        byte rciCount2;
         int saveGamePropertyCount;
         return new Lot(
                 offset,
@@ -114,16 +112,25 @@ public class Lot {
                 LotZoneWealth.byId(buffer.readByte()),
                 buffer.readUInt32(),
                 buffer.readUInt32(),
-                buffer.readByte(),
-                linkedIndustrialLot = buffer.readInt32(),
-                linkedIndustrialLot != 0x00000000 ? buffer.readInt32() : 0,
-                linkedAnchorLot = buffer.readInt32(),
-                linkedAnchorLot != 0x00000000 ? buffer.readInt32() : 0,
+                buffer.readAndSkipIf(buffer::readByte, buf -> format == DecodingFormat.MACOS, 4),
+                linkedIndustrialLot = buffer.readUInt32(),
+                format == DecodingFormat.MACOS ? (linkedIndustrialLot != 0 ? 0 : buffer.readUInt32()) : linkedIndustrialLot == 0 ? 0 : buffer.readUInt32(),
+                linkedAnchorLot = buffer.readUInt32(),
+                format == DecodingFormat.MACOS ? buffer.reader(() -> {
+                    if (linkedAnchorLot != 0) {
+                        buffer.offset(8);
+
+                        if (buffer.peek(buffer::readUInt32) != 0) {
+                            buffer.offset(4);
+                        }
+                    }
+
+                    return buffer.readUInt32();
+                }) : linkedAnchorLot == 0 ? 0 : buffer.readUInt32(),
                 count = buffer.readByte(),
-                rciCount = (count == 0 ? 0 : buffer.readByte()),
-                RCI.parseAll(buffer, rciCount, count),
-                rciCount2 = buffer.readByte(),
-                RCI.parseAll(buffer, rciCount2, count),
+                RCI.parseCapacities(buffer, count),
+                rciCount = buffer.readByte(),
+                RCI.parseTotalCapacities(buffer, rciCount),
                 buffer.readFloat32(),
                 buffer.readFloat32(),
                 buffer.readFloat32(),
@@ -147,7 +154,20 @@ public class Lot {
             );
         }
 
-        public static List<RCI> parseAll(FileBuffer buffer, int rciCount, int count) {
+        public static List<RCI> parseCapacities(FileBuffer buffer, int count) {
+            List<RCI> rcis = new ArrayList<>();
+            for (int i = 0; i < count; i++) {
+                byte typeCount = buffer.readByte();
+                for (int j = 0; j < typeCount; j++) {
+                    RCI rci = RCI.parse(buffer);
+                    rcis.add(rci);
+                }
+            }
+
+            return rcis;
+        }
+
+        public static List<RCI> parseTotalCapacities(FileBuffer buffer, int rciCount) {
             List<RCI> rcis = new ArrayList<>();
             for (int i = 0; i < rciCount; i++) {
                 RCI rci = RCI.parse(buffer);

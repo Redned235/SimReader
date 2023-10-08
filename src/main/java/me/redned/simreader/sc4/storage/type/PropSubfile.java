@@ -2,6 +2,7 @@ package me.redned.simreader.sc4.storage.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.redned.simreader.sc4.storage.SC4File;
 import me.redned.simreader.sc4.type.Prop;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.util.Utils;
@@ -15,7 +16,7 @@ public class PropSubfile {
 
     private final List<Prop> props;
 
-    public static PropSubfile parse(byte[] bytes, int size) {
+    public static PropSubfile parse(SC4File sc4File, byte[] bytes, int size) {
         List<Prop> props = new ArrayList<>();
 
         int offset = 0;
@@ -25,7 +26,7 @@ public class PropSubfile {
             byte[] propBytes = new byte[currentSize];
             System.arraycopy(bytes, offset, propBytes, 0, currentSize);
 
-            Prop prop = Prop.parse(new FileBuffer(propBytes, offset));
+            Prop prop = Prop.parse(new FileBuffer(propBytes, sc4File, offset));
             props.add(prop);
 
             offset += currentSize;

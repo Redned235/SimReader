@@ -2,6 +2,7 @@ package me.redned.simreader.sc4.storage.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.redned.simreader.sc4.storage.SC4File;
 import me.redned.simreader.sc4.type.Flora;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.util.Utils;
@@ -15,7 +16,7 @@ public class FloraSubfile {
 
     private final List<Flora> flora;
 
-    public static FloraSubfile parse(byte[] bytes, int size) {
+    public static FloraSubfile parse(SC4File sc4File, byte[] bytes, int size) {
         List<Flora> floras = new ArrayList<>();
 
         int offset = 0;
@@ -25,7 +26,7 @@ public class FloraSubfile {
             byte[] floraBytes = new byte[currentSize];
             System.arraycopy(bytes, offset, floraBytes, 0, currentSize);
 
-            Flora flora = Flora.parse(new FileBuffer(floraBytes, offset));
+            Flora flora = Flora.parse(new FileBuffer(floraBytes, sc4File, offset));
             floras.add(flora);
 
             offset += currentSize;

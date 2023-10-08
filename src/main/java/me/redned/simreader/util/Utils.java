@@ -4,8 +4,20 @@ import me.redned.simreader.storage.FileBuffer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class Utils {
+    // Savegame files exported through the Asypr SimCity port on macOS will
+    // have this value at the beginning of the savegame properties count value.
+    // What this represents is unknown, however it is always the value below.
+    //
+    // The predicate below can be used to detect if a savegame file was exported
+    // through the Asypr port, and if so, the value should be skipped.
+    private static final int ASPYR_EXTRA_DATA = 131074;
+
+    public static final Predicate<FileBuffer> ASYPR_EXTRA_DATA_PREDICATE = buffer ->
+            buffer.peek(buffer::readUInt32) == ASPYR_EXTRA_DATA;
+
     public static final Map<Integer, ValueTypeReader> SGPROP_DATA_READERS = Map.of(
             0x01, (data, buffer, len) -> data.add(buffer.readByte()),
             0x02, (data, buffer, len) ->  data.add(buffer.readUInt16()),
@@ -64,6 +76,7 @@ public class Utils {
     public static void readValueType(Map<Integer, ValueTypeReader> dataReaders, FileBuffer buffer, List<Object> data, int valueType, int strLen) {
         ValueTypeReader reader = dataReaders.get(valueType);
         if (reader == null) {
+            System.err.println("No reader for value type: " + valueType);
             return;
         }
 

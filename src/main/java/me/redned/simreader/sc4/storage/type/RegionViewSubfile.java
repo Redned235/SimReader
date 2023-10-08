@@ -45,7 +45,7 @@ public class RegionViewSubfile {
         int industrialPopulation = buffer.readUInt32();
 
         if (minorVersion > 9) {
-            buffer.skip(4);
+            buffer.offset(4);
         }
 
         byte mayorRating = 0;
@@ -57,7 +57,7 @@ public class RegionViewSubfile {
         byte tutorialFlag = buffer.readByte();
         int cityGuid = buffer.readUInt32();
 
-        buffer.skip(4 * 5); // Skip over unknown fields
+        buffer.offset(4 * 5); // Skip over unknown fields
 
         byte modeFlag = buffer.readByte();
         int cityNameLength = buffer.readUInt32();

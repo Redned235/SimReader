@@ -2,6 +2,7 @@ package me.redned.simreader.sc4.storage.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.redned.simreader.sc4.storage.SC4File;
 import me.redned.simreader.sc4.type.NetworkTile2;
 import me.redned.simreader.storage.FileBuffer;
 import me.redned.simreader.util.Utils;
@@ -15,7 +16,7 @@ public class NetworkTile2Subfile {
 
     private final List<NetworkTile2> networkTiles;
 
-    public static NetworkTile2Subfile parse(byte[] bytes, int size) {
+    public static NetworkTile2Subfile parse(SC4File sc4File, byte[] bytes, int size) {
         List<NetworkTile2> networkTiles = new ArrayList<>();
 
         int offset = 0;
@@ -25,7 +26,7 @@ public class NetworkTile2Subfile {
             byte[] networkTileBytes = new byte[currentSize];
             System.arraycopy(bytes, offset, networkTileBytes, 0, currentSize);
 
-            NetworkTile2 networkTile = NetworkTile2.parse(new FileBuffer(networkTileBytes, offset));
+            NetworkTile2 networkTile = NetworkTile2.parse(new FileBuffer(networkTileBytes, sc4File, offset));
             networkTiles.add(networkTile);
 
             offset += currentSize;
